@@ -5,7 +5,6 @@ import shlex
 """Small pandoc wrapper.
 Only TO PDF and FROM LATEX and DOCX."""
 
-
 try:
     from shutil import which
 except ImportError:
@@ -38,32 +37,28 @@ class BaseConverter(object):
         self.pdf_engine = pdf_engine_flag + xelatex_str
         self.verbose = verbose
 
+        self.arguments = [pandoc_str]
+        if self.from_format:
+            self.add_arguments(from_flag, self.from_format)
+
+        if self.verbose:
+            self.add_arguments(verbose_flag)
+
+        self.add_arguments(self.pdf_engine, output_flag, self.file_out, self.file_in)
+
     def __str__(self):
-        return "in: " + str(self.file_in) + \
-               " out: " + str(self.file_out) + \
-               " engine: " + str(self.pdf_engine) + \
-               " verbose: " + str(self.verbose)
+        return "Converter("+str(self.arguments)+")"
+
+    def add_arguments(self, *to_add):
+        for arg in to_add:
+            self.arguments.append(arg)
 
     def convert(self):
 
-        arguments = [pandoc_str]
-        if self.from_format:
-            arguments.append(from_flag)
-            arguments.append(self.from_format)
+        print(self)
 
-        if self.verbose:
-            arguments.append(verbose_flag)
-
-        arguments.append(self.pdf_engine)
-        arguments.append(output_flag)
-        arguments.append(self.file_out)
-        arguments.append(self.file_in)
-
-        print(arguments)
-
-        process = subprocess.Popen(arguments, stdin=PIPE, stdout=PIPE)
+        process = subprocess.Popen(self.arguments, stdin=PIPE, stdout=PIPE, encoding="UTF-8")
         outs, errs = process.communicate()
 
         print(outs)
-        print(errs)
-
+        print("errors:" + errs)
