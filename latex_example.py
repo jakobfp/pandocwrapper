@@ -1,10 +1,5 @@
 import pandocwrapper
-
-
-# bc = pandocwrapper.BaseConverter(file_in="files/latex.tex",
-#                                 file_out="files/output.pdf",
-#                                 from_format=pandocwrapper.latex_str,
-#                                 verbose=True)
+                               verbose=True)
 
 lc = pandocwrapper.LatexConverter(file_in="latex.tex",
                                   file_out="output.pdf",
