@@ -1,5 +1,5 @@
 import pandocwrapper
-                               verbose=True)
+
 
 lc = pandocwrapper.LatexConverter(file_in="latex.tex",
                                   file_out="output.pdf",
