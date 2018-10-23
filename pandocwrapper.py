@@ -173,7 +173,7 @@ class DocxConverter(BaseConverter):
                  from_format=docx_str, to_format=None, path_to_files=".", verbose=False):
         """
         Calls BaseConverter.__init__() first.
-        :param template: Path to reference file (.docx), has to be place in path_to_files.
+        :param template: Path to reference/template file (.docx or .tex), has to be place in path_to_files.
         :type template: str
         """
 
@@ -190,7 +190,7 @@ class DocxConverter(BaseConverter):
         Adds '-s', '--data-dir=.' (if self.template is not None) to self.arguments.
         '--data-dir' is set to '.' because the working directory of the subprocess will be set to self.path_to_files.
         Adds '--template=self.template' if self.to_format is None, so output will be pdf.
-        Or adds '--reference=self.template' if self.to_format is 'docx' and self.file_out ends in '.docx'
+        Or adds '--reference=self.template' if self.to_format is 'docx' and self.template ends in '.docx'
 
         :return: nothing
         """
