@@ -25,12 +25,17 @@ docx_str: str = "docx"
 
 # BaseConverter class
 class BaseConverter(object):
-    """Base Converter class
+    """Base Converter
+
     Class to convert from and to different formats, default is to convert to PDF.
     """
 
     def __init__(self, file_in, file_out, from_format=None, to_format=None, path_to_files=".", verbose=False):
         """
+        function:: __init__(self, file_in, file_out, from_format=None, to_format=None, path_to_files=".", verbose=False)
+
+        Constructor
+
         :param file_in: Path to file to be converted
         :param file_out: Path to output file
         :param from_format: Format of input file (default is None), pandoc will determine if None
@@ -42,7 +47,8 @@ class BaseConverter(object):
         :type from_format: str, optional
         :type to_format: str, optional
         :type path_to_files: str, optional
-        :type verbose: bool, optional"""
+        :type verbose: bool, optional
+        """
 
         self.from_format = from_format
         self.to_format = to_format
@@ -58,11 +64,12 @@ class BaseConverter(object):
 
     def add_arguments(self, *to_add):
         """
-        Adds argument to list of arguments, that will be executed as a command in a subprocess
+        Adds argument to list of arguments(:code:`self.arguments`), that will be executed as a command in a subprocess
+
 
         :param to_add: argument(s) to add to the argument list
         :type to_add: str or list of str
-        :return: nothing
+        :returns: nothing
         """
 
         for arg in to_add:
@@ -71,12 +78,14 @@ class BaseConverter(object):
     def construct_command(self):
         """
         Constructs the base command, based on the class attributes.
-        Always starts with `pandoc`. Second is '-f ' if given.
-        Third is '-t ' if given and matching the self.file_out ending,
-            otherwise changes self.file_out ending to .pdf and sets self.to_format to None.
-        Last is the '--verbose' flag is self.verbose is True.
 
-        :return: nothing
+        Always starts with :code:`pandoc`. Second is :code:`-f` if :code:`self.from_format` given.
+        Third is :code:`-t` if given and matching the :code:`self.file_out` ending,
+        otherwise changes :code:`self.file_out` ending to `.pdf` and sets :code:`self.to_format` to :code:`None`.
+        Last is the :code:`--verbose` flag if :code:`self.verbose` is :code:`True`.
+
+
+        :returns: nothing
         """
 
         self.arguments = [pandoc_str]
@@ -101,16 +110,23 @@ class BaseConverter(object):
 
     def convert(self):
         """
-        Converts the input file by sending the pandoc command to a subprocess.
-        First adds missing, but common arguments to the arguments list:
-            --pdf-engine (if self.to_format is None)
-            -o self.file_out
-            self.file_in
-        Creates a subprocess using Popen, self.arguments is set as 'args' of the subprocess.
-        Sets the working directory to self.path_to_files.
-        Prints stdout and error (if happened) of subprocess to console.
+        Converts the input file by sending the `pandoc` command to a subprocess.
 
-        :return: nothing
+        First adds missing, but common arguments to the arguments list:
+            :code:`--pdf-engine` (if :code:`self.to_format` is :code:`None`)
+
+            :code:`-o self.file_out`
+
+            :code:`self.file_in`
+
+        Creates a subprocess using `Popen`_, :code:`self.arguments` is set as :code:`args` of the subprocess.
+        Sets the working directory (:code:`cwd`) to :code:`self.path_to_files`.
+
+        .. _Popen: https://docs.python.org/2/library/subprocess.html#subprocess.Popen
+
+        Prints `stdout` and `error` (if happened) of subprocess to console.
+
+        :returns: nothing
         """
 
         if self.to_format is None:
@@ -124,13 +140,16 @@ class BaseConverter(object):
 
 
 class LatexConverter(BaseConverter):
-    """Latex Converter class
+    """Latex Converter
+
     Converts from latex to different formats, default is to convert to PDF."""
 
     def __init__(self, file_in, file_out, bib=None, template=None,
                  from_format=latex_str, to_format=None, path_to_files=".", verbose=False):
         """
-        Calls BaseConverter.__init__() first.
+        Calls :code:`BaseConverter.__init__()` first.
+
+
         :param bib: Path to bibliography file (.bib), has to be placed in path_to_files.
         :param template: Path to template file (.tex), has to be placed in path_to_files.
         :type bib: str
@@ -147,12 +166,16 @@ class LatexConverter(BaseConverter):
 
     def construct_command(self):
         """
-        Calls BaseConverter.construct_command() first.
-        Adds '--bibliography=self.bib' (if self.bib is not None) to self.arguments.
-        Adds '-s', '--data-dir=.' and '--template=self.template' (if self.template is not None) to self.arguments.
-        '--data-dir' is set to '.' because the working directory of the subprocess will be set to self.path_to_files.
+        Calls :code:`BaseConverter.construct_command()` first.
 
-        :return: nothing
+        Adds :code:`--bibliography=self.bib` (if :code:`self.bib` is not :code:`None`) to :code:`self.arguments`.
+        Adds :code:`-s`, :code:`--data-dir=.` and :code:`--template=self.template`
+        (if :code:`self.template` is not :code:`None`) to :code:`self.arguments`.
+        :code:`--data-dir` is set to the current directory because the working directory of the subprocess
+        will be set to :code:`self.path_to_files`.
+
+
+        :returns: nothing
         """
 
         super().construct_command()
@@ -166,13 +189,15 @@ class LatexConverter(BaseConverter):
 
 
 class DocxConverter(BaseConverter):
-    """Docx Converter class
+    """Docx Converter
+
     Converts from docx to different formats, default is to convert to PDF."""
 
     def __init__(self, file_in, file_out, template=None,
                  from_format=docx_str, to_format=None, path_to_files=".", verbose=False):
         """
-        Calls BaseConverter.__init__() first.
+        Calls :code:`BaseConverter.__init__()` first.
+
         :param template: Path to reference/template file (.docx or .tex), has to be place in path_to_files.
         :type template: str
         """
@@ -186,13 +211,16 @@ class DocxConverter(BaseConverter):
 
     def construct_command(self):
         """
-        Calls BaseConverter.construct_command() first.
-        Adds '-s', '--data-dir=.' (if self.template is not None) to self.arguments.
-        '--data-dir' is set to '.' because the working directory of the subprocess will be set to self.path_to_files.
-        Adds '--template=self.template' if self.to_format is None, so output will be pdf.
-        Or adds '--reference=self.template' if self.to_format is 'docx' and self.template ends in '.docx'
+        Calls :code:`BaseConverter.construct_command()` first.
 
-        :return: nothing
+        Adds :code:`-s`, :code:`--data-dir=.` (if :code:`self.template` is not None) to :code:`self.arguments`.
+        :code:`--data-dir` is set to the current directory because the working directory of the subprocess
+        will be set to :code:`self.path_to_files`.
+        Adds :code:`--template=self.template` if :code:`self.to_format` is None, so output will be pdf.
+        Or adds :code:`--reference=self.template` if :code:`self.to_format` is `docx` and :code:`self.template` ends in `.docx`
+
+
+        :returns: nothing
         """
 
         super().construct_command()
