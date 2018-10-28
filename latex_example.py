@@ -1,11 +1,10 @@
 import pandocwrapper
 
 
-lc = pandocwrapper.LatexConverter(file_in="latex.tex",
-                                  file_out="output.pdf",
-                                  path_to_files="files/",
+lc = pandocwrapper.LatexConverter(file_in="examples/latex/latex_example.tex",
+                                  path_to_files="cis/latex",
                                   verbose=True,
-                                  template="template2.tex",
-                                  bib="literatur.bib")
+                                  template="htwberlin.tex",
+                                  bib="examples/latex/literatur.bib")
 lc.construct_command()
 lc.convert()
