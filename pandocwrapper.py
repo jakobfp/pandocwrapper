@@ -17,6 +17,7 @@ verbose_flag: str = "--verbose"
 standalone_flag: str = "--standalone"
 bib_flag: str = "--bibliography="
 template_flag: str = "--template="
+resources_flag: str = "--resource-path="
 reference_flag: str = "--reference-doc="
 datadir_flag: str = "--data-dir="
 xelatex_str: str = "xelatex"
@@ -152,7 +153,7 @@ class LatexConverter(BaseConverter):
 
     Converts from latex to different formats, default is to convert to PDF."""
 
-    def __init__(self, file_in, file_out=None, bib=None, template=None,
+    def __init__(self, file_in, file_out=None, bib=None, template=None, resources_path=None,
                  from_format=latex_str, to_format=None, path_to_files=".", verbose=False):
         """
         Calls :code:`BaseConverter.__init__()` first.
@@ -160,14 +161,18 @@ class LatexConverter(BaseConverter):
 
         :param bib: Path to bibliography file (.bib), has to be placed in path_to_files.
         :param template: Path to template file (.tex), has to be placed in path_to_files.
+        :param resources_path: Path to resource (images etc.) files (default is '.')
         :type bib: str
         :type template: str
+        :type resources_path: str, optional (default is None, will be set to path of :code:`self.file_in`)
         """
 
         super().__init__(file_in=file_in, file_out=file_out,
-                         from_format=from_format, to_format=to_format, verbose=verbose, path_to_files=path_to_files)
+                         from_format=from_format, to_format=to_format, verbose=verbose,
+                         path_to_files=path_to_files)
         self.bib = bib
         self.template = template
+        self.resources_path = resources_path
 
     def __str__(self):
         return "LatexConverter(" + str(self.arguments) + ")"
@@ -188,6 +193,9 @@ class LatexConverter(BaseConverter):
 
         super().construct_command()
 
+        if not self.resources_path:
+            self.resources_path = "/".join(self.file_in.split("/")[:-1])
+
         if not self.template:
             print("not template given - using htwberlin.tex...")
             self.template = htw_template_str
@@ -198,6 +206,7 @@ class LatexConverter(BaseConverter):
         self.add_arguments(standalone_flag)
         self.add_arguments(datadir_flag + ".")
         self.add_arguments(template_flag + self.template)
+        self.add_arguments(resources_flag + self.resources_path)
 
 
 class DocxConverter(BaseConverter):
@@ -215,7 +224,8 @@ class DocxConverter(BaseConverter):
         """
 
         super().__init__(file_in=file_in, file_out=file_out,
-                         from_format=from_format, to_format=to_format, verbose=verbose, path_to_files=path_to_files)
+                         from_format=from_format, to_format=to_format, verbose=verbose,
+                         path_to_files=path_to_files)
         self.template = template
 
     def __str__(self):
