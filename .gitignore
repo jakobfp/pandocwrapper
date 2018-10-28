@@ -9,3 +9,5 @@ __pycache__/*
 docs/*
 
 open_word.py
+
+cis/latex/imgs/*

@@ -3,7 +3,9 @@ from subprocess import PIPE, STDOUT, DEVNULL
 from shutil import which
 
 """Small pandoc wrapper.
-Only TO PDF and FROM LATEX and DOCX."""
+
+Only TO PDF and FROM LATEX and DOCX.
+"""
 
 # CONSTS
 pandoc_str: str = which('pandoc')
@@ -22,6 +24,9 @@ pdflatex_str: str = "pdflatex"
 latex_str: str = "latex"
 docx_str: str = "docx"
 
+# TEMPLATES
+htw_template_str: str = "htwberlin.tex"
+
 
 # BaseConverter class
 class BaseConverter(object):
@@ -30,7 +35,7 @@ class BaseConverter(object):
     Class to convert from and to different formats, default is to convert to PDF.
     """
 
-    def __init__(self, file_in, file_out, from_format=None, to_format=None, path_to_files=".", verbose=False):
+    def __init__(self, file_in, file_out=None, from_format=None, to_format=None, path_to_files=".", verbose=False):
         """
         function:: __init__(self, file_in, file_out, from_format=None, to_format=None, path_to_files=".", verbose=False)
 
@@ -90,6 +95,9 @@ class BaseConverter(object):
 
         self.arguments = [pandoc_str]
 
+        if not self.file_out:
+            self.file_out = str(self.file_in.split('.')[0] + "-output.pdf")
+
         if self.from_format:
             self.add_arguments(from_flag, self.from_format)
 
@@ -144,7 +152,7 @@ class LatexConverter(BaseConverter):
 
     Converts from latex to different formats, default is to convert to PDF."""
 
-    def __init__(self, file_in, file_out, bib=None, template=None,
+    def __init__(self, file_in, file_out=None, bib=None, template=None,
                  from_format=latex_str, to_format=None, path_to_files=".", verbose=False):
         """
         Calls :code:`BaseConverter.__init__()` first.
@@ -168,9 +176,9 @@ class LatexConverter(BaseConverter):
         """
         Calls :code:`BaseConverter.construct_command()` first.
 
+        Sets :code:`self.template` to `htwberlin.tex`, if :code:`self.template` is not None.
         Adds :code:`--bibliography=self.bib` (if :code:`self.bib` is not :code:`None`) to :code:`self.arguments`.
-        Adds :code:`-s`, :code:`--data-dir=.` and :code:`--template=self.template`
-        (if :code:`self.template` is not :code:`None`) to :code:`self.arguments`.
+        Adds :code:`-s`, :code:`--data-dir=.` and :code:`--template=self.template` to :code:`self.arguments`.
         :code:`--data-dir` is set to the current directory because the working directory of the subprocess
         will be set to :code:`self.path_to_files`.
 
@@ -179,13 +187,17 @@ class LatexConverter(BaseConverter):
         """
 
         super().construct_command()
+
+        if not self.template:
+            print("not template given - using htwberlin.tex...")
+            self.template = htw_template_str
+
         if self.bib:
             self.add_arguments(bib_flag + self.bib)
 
-        if self.template:
-            self.add_arguments(standalone_flag)
-            self.add_arguments(datadir_flag + ".")
-            self.add_arguments(template_flag + self.template)
+        self.add_arguments(standalone_flag)
+        self.add_arguments(datadir_flag + ".")
+        self.add_arguments(template_flag + self.template)
 
 
 class DocxConverter(BaseConverter):
@@ -193,7 +205,7 @@ class DocxConverter(BaseConverter):
 
     Converts from docx to different formats, default is to convert to PDF."""
 
-    def __init__(self, file_in, file_out, template=None,
+    def __init__(self, file_in, file_out=None, template=None,
                  from_format=docx_str, to_format=None, path_to_files=".", verbose=False):
         """
         Calls :code:`BaseConverter.__init__()` first.
@@ -213,7 +225,8 @@ class DocxConverter(BaseConverter):
         """
         Calls :code:`BaseConverter.construct_command()` first.
 
-        Adds :code:`-s`, :code:`--data-dir=.` (if :code:`self.template` is not None) to :code:`self.arguments`.
+        Sets :code:`self.template` to `htwberlin.tex`, if :code:`self.template` is not None.
+        Adds :code:`-s`, :code:`--data-dir=.` to :code:`self.arguments`.
         :code:`--data-dir` is set to the current directory because the working directory of the subprocess
         will be set to :code:`self.path_to_files`.
         Adds :code:`--template=self.template` if :code:`self.to_format` is None, so output will be pdf.
@@ -225,11 +238,15 @@ class DocxConverter(BaseConverter):
 
         super().construct_command()
 
-        if self.template:
-            self.add_arguments(standalone_flag)
-            self.add_arguments(datadir_flag + ".")
+        if not self.template:
+            print("not template given - using htwberlin.tex...")
+            self.template = htw_template_str
 
-            if self.to_format is None:  # assuming pdf creation
-                self.add_arguments(template_flag + self.template)
-            elif self.to_format == docx_str and self.template.split(".")[1] == docx_str:
-                self.add_arguments(reference_flag + self.template)
+        self.file_out = str(self.file_out.split('-')[0] + "-" + self.template.split(".")[0] + ".pdf")
+        self.add_arguments(standalone_flag)
+        self.add_arguments(datadir_flag + ".")
+
+        if self.to_format is None:  # assuming pdf creation
+            self.add_arguments(template_flag + self.template)
+        elif self.to_format == docx_str and self.template.split(".")[1] == docx_str:
+            self.add_arguments(reference_flag + self.template)
