@@ -146,6 +146,7 @@ class BaseConverter(object):
         outs, errs = process.communicate()
         print(outs)
         print("process errors: " + str(errs))
+        return errs
 
 
 class LatexConverter(BaseConverter):
