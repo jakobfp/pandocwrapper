@@ -1,0 +1,7 @@
+latex\_example module
+=====================
+
+.. automodule:: latex_example
+    :members:
+    :undoc-members:
+    :show-inheritance:

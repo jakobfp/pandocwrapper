@@ -1,0 +1,11 @@
+pandocwrapper
+=============
+
+.. toctree::
+   :maxdepth: 4
+
+   conf
+   docx_example
+   latex_example
+   open_word
+   pandocwrapper

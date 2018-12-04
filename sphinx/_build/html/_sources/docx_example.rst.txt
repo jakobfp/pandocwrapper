@@ -1,0 +1,7 @@
+docx\_example module
+====================
+
+.. automodule:: docx_example
+    :members:
+    :undoc-members:
+    :show-inheritance:
