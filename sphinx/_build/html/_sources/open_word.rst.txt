@@ -1,7 +1,0 @@
-open\_word module
-=================
-
-.. automodule:: open_word
-    :members:
-    :undoc-members:
-    :show-inheritance:
