@@ -8,7 +8,7 @@ Full list in [requirements](./requirements.txt)
 
 ### Start API
 
-`$ python app.py` is enough to let the application serve at [localhost:5000/api](localhost:5000/api).
+`$ python app.py` is enough to let the application serve at [http://localhost:5000/api](http://localhost:5000/api).
 
 ### Documentation
 
