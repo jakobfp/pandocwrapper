@@ -160,6 +160,34 @@ will be set to <code class="code docutils literal notranslate"><span class="pre"
 
 </dd></dl>
 
+<dl class="class">
+<dt id="pandocwrapper.OdtConverter">
+<em class="property">class </em><code class="descclassname">pandocwrapper.</code><code class="descname">OdtConverter</code><span class="sig-paren">(</span><em>file_in</em>, <em>file_out=None</em>, <em>template=None</em>, <em>from_format='odt'</em>, <em>to_format=None</em>, <em>path_to_files='.'</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pandocwrapper.OdtConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pandocwrapper.BaseConverter" title="pandocwrapper.BaseConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandocwrapper.BaseConverter</span></code></a></p>
+<p>Odt Converter</p>
+<p>Converts from odt to different formats, default is to convert to PDF.</p>
+<dl class="method">
+<dt id="pandocwrapper.OdtConverter.construct_command">
+<code class="descname">construct_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pandocwrapper.OdtConverter.construct_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <code class="code docutils literal notranslate"><span class="pre">BaseConverter.construct_command()</span></code> first.</p>
+<p>Sets <code class="code docutils literal notranslate"><span class="pre">self.template</span></code> to <cite>htwberlin.tex</cite>, if <code class="code docutils literal notranslate"><span class="pre">self.template</span></code> is not None.
+Adds <code class="code docutils literal notranslate"><span class="pre">-s</span></code>, <code class="code docutils literal notranslate"><span class="pre">--data-dir=.</span></code> to <code class="code docutils literal notranslate"><span class="pre">self.arguments</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">--data-dir</span></code> is set to the current directory because the working directory of the subprocess
+will be set to <code class="code docutils literal notranslate"><span class="pre">self.path_to_files</span></code>.
+Adds <code class="code docutils literal notranslate"><span class="pre">--template=self.template</span></code> if <code class="code docutils literal notranslate"><span class="pre">self.to_format</span></code> is None, so output will be pdf.
+Or adds <code class="code docutils literal notranslate"><span class="pre">--reference=self.template</span></code> if <code class="code docutils literal notranslate"><span class="pre">self.to_format</span></code> is <cite>docx</cite> and <code class="code docutils literal notranslate"><span class="pre">self.template</span></code> ends in <cite>.docx</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nothing</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
