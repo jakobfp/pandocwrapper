@@ -4,7 +4,7 @@ from shutil import which
 
 """Small pandoc wrapper.
 
-Only TO PDF and FROM LATEX and DOCX.
+Only TO PDF and FROM LATEX, DOCX and ODT.
 """
 
 # CONSTS
@@ -24,6 +24,7 @@ xelatex_str: str = "xelatex"
 pdflatex_str: str = "pdflatex"
 latex_str: str = "latex"
 docx_str: str = "docx"
+odt_str: str = "odt"
 
 # TEMPLATES
 htw_template_str: str = "htwberlin.tex"
@@ -220,7 +221,7 @@ class DocxConverter(BaseConverter):
         """
         Calls :code:`BaseConverter.__init__()` first.
 
-        :param template: Path to reference/template file (.docx or .tex), has to be place in path_to_files.
+        :param template: Path to reference/template file (.docx or .tex), has to be placed in path_to_files.
         :type template: str
         """
 
@@ -260,4 +261,57 @@ class DocxConverter(BaseConverter):
         if self.to_format is None:  # assuming pdf creation
             self.add_arguments(template_flag + self.template)
         elif self.to_format == docx_str and self.template.split(".")[1] == docx_str:
+            self.add_arguments(reference_flag + self.template)
+
+
+class OdtConverter(BaseConverter):
+    """Odt Converter
+
+    Converts from odt to different formats, default is to convert to PDF."""
+
+    def __init__(self, file_in, file_out=None, template=None,
+                 from_format=odt_str, to_format=None, path_to_files=".", verbose=False):
+        """
+        Calls :code:`BaseConverter.__init__()` first.
+
+        :param template: Path to reference/template file (.odt or .tex), has to be placed in path_to_files.
+        :type template: str
+        """
+
+        super().__init__(file_in=file_in, file_out=file_out,
+                         from_format=from_format, to_format=to_format, verbose=verbose,
+                         path_to_files=path_to_files)
+        self.template = template
+
+    def __str__(self):
+        return "OdtConverter(" + str(self.arguments) + ")"
+
+    def construct_command(self):
+        """
+        Calls :code:`BaseConverter.construct_command()` first.
+
+        Sets :code:`self.template` to `htwberlin.tex`, if :code:`self.template` is not None.
+        Adds :code:`-s`, :code:`--data-dir=.` to :code:`self.arguments`.
+        :code:`--data-dir` is set to the current directory because the working directory of the subprocess
+        will be set to :code:`self.path_to_files`.
+        Adds :code:`--template=self.template` if :code:`self.to_format` is None, so output will be pdf.
+        Or adds :code:`--reference=self.template` if :code:`self.to_format` is `docx` and :code:`self.template` ends in `.docx`
+
+
+        :returns: nothing
+        """
+
+        super().construct_command()
+
+        if not self.template:
+            print("not template given - using htwberlin.tex...")
+            self.template = htw_template_str
+
+        self.file_out = str(self.file_out.split('.')[0] + "-" + self.template.split(".")[0] + ".pdf")
+        self.add_arguments(standalone_flag)
+        self.add_arguments(datadir_flag + ".")
+
+        if self.to_format is None:  # assuming pdf creation
+            self.add_arguments(template_flag + self.template)
+        elif self.to_format == odt_str and self.template.split(".")[1] == odt_str:
             self.add_arguments(reference_flag + self.template)
