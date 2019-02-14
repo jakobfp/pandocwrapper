@@ -295,7 +295,7 @@ class OdtConverter(BaseConverter):
         :code:`--data-dir` is set to the current directory because the working directory of the subprocess
         will be set to :code:`self.path_to_files`.
         Adds :code:`--template=self.template` if :code:`self.to_format` is None, so output will be pdf.
-        Or adds :code:`--reference=self.template` if :code:`self.to_format` is `docx` and :code:`self.template` ends in `.docx`
+        Or adds :code:`--reference=self.template` if :code:`self.to_format` is `odt` and :code:`self.template` ends in `.odt`
 
 
         :returns: nothing
