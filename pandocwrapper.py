@@ -254,7 +254,6 @@ class DocxConverter(BaseConverter):
             print("not template given - using htwberlin.tex...")
             self.template = htw_template_str
 
-        self.file_out = str(self.file_out.split('-')[0] + "-" + self.template.split(".")[0] + ".pdf")
         self.add_arguments(standalone_flag)
         self.add_arguments(datadir_flag + ".")
 
@@ -307,7 +306,6 @@ class OdtConverter(BaseConverter):
             print("not template given - using htwberlin.tex...")
             self.template = htw_template_str
 
-        self.file_out = str(self.file_out.split('.')[0] + "-" + self.template.split(".")[0] + ".pdf")
         self.add_arguments(standalone_flag)
         self.add_arguments(datadir_flag + ".")
 
