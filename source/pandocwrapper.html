@@ -161,6 +161,33 @@ will be set to <code class="code docutils literal notranslate"><span class="pre"
 </dd></dl>
 
 <dl class="class">
+<dt id="pandocwrapper.MdConverter">
+<em class="property">class </em><code class="descclassname">pandocwrapper.</code><code class="descname">MdConverter</code><span class="sig-paren">(</span><em>file_in</em>, <em>file_out=None</em>, <em>template=None</em>, <em>from_format='markdown'</em>, <em>path_to_files='.'</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pandocwrapper.MdConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pandocwrapper.BaseConverter" title="pandocwrapper.BaseConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandocwrapper.BaseConverter</span></code></a></p>
+<p>Markdown Converter</p>
+<p>Converts from markdown to PDF using beamer</p>
+<dl class="method">
+<dt id="pandocwrapper.MdConverter.construct_command">
+<code class="descname">construct_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pandocwrapper.MdConverter.construct_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <code class="code docutils literal notranslate"><span class="pre">BaseConverter.construct_command()</span></code> first.</p>
+<p>Sets <code class="code docutils literal notranslate"><span class="pre">self.template</span></code> to <cite>htwberlin-beamer.tex</cite>, if <code class="code docutils literal notranslate"><span class="pre">self.template</span></code> is not None.
+Adds <code class="code docutils literal notranslate"><span class="pre">-s</span></code>, <code class="code docutils literal notranslate"><span class="pre">--data-dir=.</span></code> to <code class="code docutils literal notranslate"><span class="pre">self.arguments</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">--data-dir</span></code> is set to the current directory because the working directory of the subprocess
+will be set to <code class="code docutils literal notranslate"><span class="pre">self.path_to_files</span></code>.
+Adds <cite>-t beamer</cite>!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">nothing</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="pandocwrapper.OdtConverter">
 <em class="property">class </em><code class="descclassname">pandocwrapper.</code><code class="descname">OdtConverter</code><span class="sig-paren">(</span><em>file_in</em>, <em>file_out=None</em>, <em>template=None</em>, <em>from_format='odt'</em>, <em>to_format=None</em>, <em>path_to_files='.'</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pandocwrapper.OdtConverter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pandocwrapper.BaseConverter" title="pandocwrapper.BaseConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandocwrapper.BaseConverter</span></code></a></p>
