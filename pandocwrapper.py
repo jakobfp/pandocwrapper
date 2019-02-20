@@ -20,14 +20,17 @@ template_flag: str = "--template="
 resources_flag: str = "--resource-path="
 reference_flag: str = "--reference-doc="
 datadir_flag: str = "--data-dir="
+beamer_str: str = "beamer"
 xelatex_str: str = "xelatex"
 pdflatex_str: str = "pdflatex"
 latex_str: str = "latex"
 docx_str: str = "docx"
 odt_str: str = "odt"
+markdown_str: str = "markdown"
 
 # TEMPLATES
 htw_template_str: str = "htwberlin.tex"
+htw_beamer_template_str: str = "htwberlin-beamer.tex"
 
 
 # BaseConverter class
@@ -139,7 +142,7 @@ class BaseConverter(object):
         :returns: nothing
         """
 
-        if self.to_format is None:
+        if self.to_format is None or self.to_format is beamer_str:
             self.add_arguments(self.pdf_engine)
         self.add_arguments(output_flag, self.file_out, self.file_in)
         print(self)
@@ -313,3 +316,51 @@ class OdtConverter(BaseConverter):
             self.add_arguments(template_flag + self.template)
         elif self.to_format == odt_str and self.template.split(".")[1] == odt_str:
             self.add_arguments(reference_flag + self.template)
+
+
+class MdConverter(BaseConverter):
+    """Markdown Converter
+
+    Converts from markdown to PDF using beamer"""
+
+    def __init__(self, file_in, file_out=None, template=None,
+                 from_format=markdown_str, path_to_files=".", verbose=False):
+        """
+        Calls :code:`BaseConverter.__init__()` first.
+
+        :param template: Path to template file (.tex), has to be placed in path_to_files.
+        :type template: str
+        """
+
+        super().__init__(file_in=file_in, file_out=file_out,
+                         from_format=from_format, to_format=None, verbose=verbose,
+                         path_to_files=path_to_files)
+        self.template = template
+
+    def __str__(self):
+        return "MdConverter(" + str(self.arguments) + ")"
+
+    def construct_command(self):
+        """
+        Calls :code:`BaseConverter.construct_command()` first.
+
+        Sets :code:`self.template` to `htwberlin-beamer.tex`, if :code:`self.template` is not None.
+        Adds :code:`-s`, :code:`--data-dir=.` to :code:`self.arguments`.
+        :code:`--data-dir` is set to the current directory because the working directory of the subprocess
+        will be set to :code:`self.path_to_files`.
+        Adds `-t beamer`!
+
+
+        :returns: nothing
+        """
+
+        super().construct_command()
+
+        if not self.template:
+            print("not template given - using htwberlin-beamer.tex...")
+            self.template = htw_beamer_template_str
+
+        self.add_arguments(standalone_flag)
+        self.add_arguments(datadir_flag + ".")
+        self.add_arguments(to_flag, beamer_str)
+        self.add_arguments(template_flag + self.template)
