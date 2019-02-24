@@ -20,6 +20,7 @@ template_flag: str = "--template="
 resources_flag: str = "--resource-path="
 reference_flag: str = "--reference-doc="
 datadir_flag: str = "--data-dir="
+toc_flag: str = "--toc"
 beamer_str: str = "beamer"
 xelatex_str: str = "xelatex"
 pdflatex_str: str = "pdflatex"
@@ -324,7 +325,7 @@ class MdConverter(BaseConverter):
     Converts from markdown to PDF using beamer"""
 
     def __init__(self, file_in, file_out=None, template=None,
-                 from_format=markdown_str, path_to_files=".", verbose=False):
+                 from_format=markdown_str, path_to_files=".", verbose=False, toc=False):
         """
         Calls :code:`BaseConverter.__init__()` first.
 
@@ -336,6 +337,7 @@ class MdConverter(BaseConverter):
                          from_format=from_format, to_format=None, verbose=verbose,
                          path_to_files=path_to_files)
         self.template = template
+        self.toc = toc
 
     def __str__(self):
         return "MdConverter(" + str(self.arguments) + ")"
@@ -359,6 +361,9 @@ class MdConverter(BaseConverter):
         if not self.template:
             print("not template given - using htwberlin-beamer.tex...")
             self.template = htw_beamer_template_str
+
+        if self.toc:
+            self.add_arguments(toc_flag)
 
         self.add_arguments(standalone_flag)
         self.add_arguments(datadir_flag + ".")
