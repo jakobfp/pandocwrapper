@@ -1,5 +1,5 @@
 import subprocess
-from subprocess import PIPE, STDOUT, DEVNULL
+from subprocess import PIPE
 from shutil import which
 
 """Small pandoc wrapper.
