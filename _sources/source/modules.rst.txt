@@ -4,4 +4,4 @@ pandocwrapper
 .. toctree::
    :maxdepth: 2
 
-    pandocwrapper
+   pandocwrapper
