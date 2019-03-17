@@ -10,7 +10,10 @@ Welcome to pandocwrapper's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   source/modules
+pandocwrapper
+=============
+.. automodule:: pandocwrapper
+   :members:
 
 
 Indices and tables
