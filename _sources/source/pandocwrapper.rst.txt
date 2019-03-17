@@ -1,7 +1,7 @@
 pandocwrapper module
 ====================
 
-.. automodule:: pandocwrapper
+.. automodule::pandocwrapper
     :members:
     :undoc-members:
     :show-inheritance:
