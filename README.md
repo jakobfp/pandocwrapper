@@ -4,11 +4,13 @@ Minimal wrapper for pandoc. Used only for own purposes.
 
 ### Requirements
 
-Full list in [requirements](./requirements.txt)
+The [pandoc cli](https://pandoc.org/installing.html) in combination with the [XeLaTeX engine](http://www.texts.io/support/0001/) is required. Please follow the install instructions on the websites.
 
 ### Setup
 
-Clone repository and use `pip` to install this package locally (e.g. in an virtual env): `$ pip install .`
+Clone repository and use `pip` to install this package globally or in an virtual environment (**recommended**):
+
+ `$ pip install .`
 
 ### Documentation
 
