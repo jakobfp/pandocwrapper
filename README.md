@@ -1,5 +1,7 @@
 # pandocwrapper
 
+**Created for an university course at HTW BERLIN.**
+
 Minimal wrapper for pandoc. Used only for own purposes.
 
 ### Requirements
